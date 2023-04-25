@@ -139,7 +139,3 @@ public:
 
 };
 
-    //faltan getters y setters    
-
-};
-
