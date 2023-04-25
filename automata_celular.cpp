@@ -60,11 +60,11 @@ public:
         case celula::estado_celula_sana :
             {
                 //se tiene que revisar la vecindad de Moore
-            short int celulas_infectadas_adyacentes_tipo_A = 0;
-            short int celulas_infectadas_adyacentes_tipo_B = 0;
             
             //aquí se INSERTA EL ANÁLISIS DE LA VECINDAD
             void analizar_vecindad(int pos_x, int pos_y) {
+                short int celulas_infectadas_adyacentes_tipo_A = 0;
+                short int celulas_infectadas_adyacentes_tipo_B = 0;
                     // Iterar sobre las 8 celdas vecinas
                     for (int dx = -1; dx <= 1; dx++) {
                         for (int dy = -1; dy <= 1; dy++) {
