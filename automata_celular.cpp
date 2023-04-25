@@ -1,21 +1,24 @@
-/**Archivo que describe la clasel automata celular
+/**Archivo que describe la clase automata celular
  * 
  * 
 */
 #include "celula.cpp"
 #include <cstdio>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 class automata_celular
 {
 private:
-    int _L; //numero de celdas => L*L
-    short int _RA; //numero de celulas infectadas tipo A necesarias para infectar a una celula sana
-    short int _RB; //numero de celulas infectadas tipo B necesarias para infectar a una celula sana
-    celula ** matriz_celulas; //la representacion de las celulas en la matriz L*L
-    int _t; //numero de "times steps" necesarios para que una celula infectada tipo A se transforme en una celula infectada tipo B
-    double _prepl; //probabilidad de que una celula muerta sea rememplaza por una celula sana
-    double _pinfec; //probabilidad de que una celula muerta sea reemplazada por una celula infectada
+    int _L; //número de celdas => L*L
+    short int _RA; //número de células infectadas tipo A necesarias para infectar a una célula sana
+    short int _RB; //número de células infectadas tipo B necesarias para infectar a una célula sana
+    celula ** matriz_celulas; //la representación de las células en la matriz L*L
+    int _t; //número de "time steps" necesarios para que una célula infectada tipo A se transforme en una célula infectada tipo B
+    double _prepl; //probabilidad de que una célula muerta sea reemplazada por una célula sana
+    double _pinfec; //probabilidad de que una célula muerta sea reemplazada por una célula infectada
+
 public:
     automata_celular(){}
 
@@ -26,7 +29,7 @@ public:
         this->_t = t;
         this->_pinfec = p_infec;
         this->_prepl = 1 - p_infec;
-        this->matriz_celulas = new celula*[L]; //se inicializa la matriz de celulas
+        this->matriz_celulas = new celula*[L]; //se inicializa la matriz de células
         for (int i = 0; i < L; i++){
             this->matriz_celulas[i] = new celula[L];
             for (int j = 0; j < L; j++){
@@ -34,9 +37,9 @@ public:
                 this->matriz_celulas[i][j].set_periodos(t);
             }
         }
-        
     }
-    //este metodo ocurre cada "timestamp"
+
+    //este método ocurre cada "time step"
     void actualizar_automata(){
         int iterador1, iterador2;
         for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
@@ -56,16 +59,47 @@ public:
         {
         case celula::estado_celula_sana :
             {
-            //se tiene que revisar la vecindad de moore
-            short int celulas_infectadas_adyacentes_tipo_A = 0;
-            short int celulas_infectadas_adyacentes_tipo_B = 0;
+            //se tiene que revisar la vecindad de Moore
+           /* short int celulas_infectadas_adyacentes_tipo_A = 0;
+            short int celulas_infectadas_adyacentes_tipo_B = 0;*/
             
-            //aquí se INSERTA EL ANALISIS DE LA VECINDAD
+            //aquí se INSERTA EL ANÁLISIS DE LA VECINDAD
+            void analizar_vecindad(int pos_x, int pos_y) {
+                short int celulas_infectadas_adyacentes_tipo_A = 0;
+                short int celulas_infectadas_adyacentes_tipo_B = 0;
 
-            if ( celulas_infectadas_adyacentes_tipo_A >= automata_celular::_RA 
-                || celulas_infectadas_adyacentes_tipo_B >= automata_celular::_RB) //tiene suficientes celulas infectadas ceranas
-                celula_a_actualizar.set_estado(celula::estado_celula_infentada_A); //pasa a infectada tipo A
-            }
+                // Iterar sobre las 8 celdas vecinas
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        // Evitar la celda central (0, 0)
+                        if (dx == 0 && dy == 0) continue;
+
+                        int vecino_x = pos_x + dx;
+                        int vecino_y = pos_y + dy;
+
+                        // Verificar que las coordenadas estén dentro de los límites de la matriz
+                        if (vecino_x >= 0 && vecino_x < _L && vecino_y >= 0 && vecino_y < _L) {
+                            celula &vecino = matriz_celulas[vecino_x][vecino_y];
+
+                            if (vecino.get_estado() == celula::estado_celula_infentada_A) {
+                                celulas_infectadas_adyacentes_tipo_A++;
+                            } else if (vecino.get_estado() == celula::estado_celula_infectada_B) {
+                                celulas_infectadas_adyacentes_tipo_B++;
+                            }
+                        }
+                    }
+                }
+
+    // Aplicar las reglas de cambio de estado
+    celula &celula_actual = matriz_celulas[pos_x][pos_y];
+    if (celula_actual.get_estado() == celula::estado_celula_sana) {
+        if (celulas_infectadas_adyacentes_tipo_A >= _RA || celulas_infectadas_adyacentes_tipo_B >= _RB) {
+            celula_actual.set_estado(celula::estado_celula_infentada_A);
+        }
+    }
+}
+
+            
             break;
         case celula::estado_celula_infentada_A :
             {
@@ -83,15 +117,27 @@ public:
             break;
         case celula::estado_celula_muerta:
             {
-            //insertar forma de calcular la probabilidad
+            // Generar un número aleatorio en el rango [0, 1]
+            double random_prob = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
+
+            // Comparar el número aleatorio con las probabilidades
+            if (random_prob <= _pinfec) {
+                celula_a_actualizar.set_estado(celula::estado_celula_infentada_A); // Reemplazar por una célula infectada tipo A
+            } else if (random_prob <= (_pinfec + _prepl)) {
+                celula_a_actualizar.set_estado(celula::estado_celula_sana); // Reemplazar por una célula sana
+            }
             }
             break;
         default:
-            //"Si llegamos aquí, hubo un error en las estados de una celula"<<endl;
+            //"Si llegamos aquí, hubo un error en las estados de una célula"<<endl;
             break;
         }
         
     }
+
+    //faltan getters y setters    
+
+};
 
     //faltan getters y setters    
 
