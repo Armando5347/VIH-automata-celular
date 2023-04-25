@@ -90,14 +90,14 @@ public:
                     }
                 }
 
-    // Aplicar las reglas de cambio de estado
-    celula &celula_actual = matriz_celulas[pos_x][pos_y];
-    if (celula_actual.get_estado() == celula::estado_celula_sana) {
-        if (celulas_infectadas_adyacentes_tipo_A >= _RA || celulas_infectadas_adyacentes_tipo_B >= _RB) {
-            celula_actual.set_estado(celula::estado_celula_infentada_A);
-        }
-    }
-}
+                // Aplicar las reglas de cambio de estado
+                celula &celula_actual = matriz_celulas[pos_x][pos_y];
+                if (celula_actual.get_estado() == celula::estado_celula_sana) {
+                    if (celulas_infectadas_adyacentes_tipo_A >= _RA || celulas_infectadas_adyacentes_tipo_B >= _RB) {
+                        celula_actual.set_estado(celula::estado_celula_infentada_A);
+                    }
+                }
+            }
 
             
             break;
