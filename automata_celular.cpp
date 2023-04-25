@@ -59,26 +59,24 @@ public:
         {
         case celula::estado_celula_sana :
             {
-            //se tiene que revisar la vecindad de Moore
-           /* short int celulas_infectadas_adyacentes_tipo_A = 0;
-            short int celulas_infectadas_adyacentes_tipo_B = 0;*/
+                //se tiene que revisar la vecindad de Moore
+            short int celulas_infectadas_adyacentes_tipo_A = 0;
+            short int celulas_infectadas_adyacentes_tipo_B = 0;
             
             //aquí se INSERTA EL ANÁLISIS DE LA VECINDAD
             void analizar_vecindad(int pos_x, int pos_y) {
-                short int celulas_infectadas_adyacentes_tipo_A = 0;
-                short int celulas_infectadas_adyacentes_tipo_B = 0;
+                    // Iterar sobre las 8 celdas vecinas
+                    for (int dx = -1; dx <= 1; dx++) {
+                        for (int dy = -1; dy <= 1; dy++) {
+                            // Evitar la celda central (0, 0)
+                            if (dx == 0 && dy == 0) continue;
 
-                // Iterar sobre las 8 celdas vecinas
-                for (int dx = -1; dx <= 1; dx++) {
-                    for (int dy = -1; dy <= 1; dy++) {
-                        // Evitar la celda central (0, 0)
-                        if (dx == 0 && dy == 0) continue;
+                            int vecino_x = (pos_x + dx + _L) % _L;
+                            int vecino_y = (pos_y + dy + _L) % _L;
 
-                        int vecino_x = pos_x + dx;
-                        int vecino_y = pos_y + dy;
+                            // No es necesario verificar los límites de la matriz, porque las condiciones de frontera toroidal
+                            // ya se manejan con el cálculo del módulo
 
-                        // Verificar que las coordenadas estén dentro de los límites de la matriz
-                        if (vecino_x >= 0 && vecino_x < _L && vecino_y >= 0 && vecino_y < _L) {
                             celula &vecino = matriz_celulas[vecino_x][vecino_y];
 
                             if (vecino.get_estado() == celula::estado_celula_infentada_A) {
@@ -89,7 +87,7 @@ public:
                         }
                     }
                 }
-
+            
                 // Aplicar las reglas de cambio de estado
                 celula &celula_actual = matriz_celulas[pos_x][pos_y];
                 if (celula_actual.get_estado() == celula::estado_celula_sana) {
