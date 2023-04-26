@@ -38,6 +38,12 @@ public:
                 this->matriz_celulas[i][j].set_periodos(t);
             }
         }
+        //se colocan las primeras celulas infectadas
+        int total_celulas_infectadas = (L * L * p_vih) / 1; //funcion piso improvisada
+        while (total_celulas_infectadas > 0){
+            matriz_celulas[rand() % L][rand() % L].set_estado(celula::estado_celula_infentada_A);
+            total_celulas_infectadas-- ;
+        }
     }
 
     //este método ocurre cada "time step"
