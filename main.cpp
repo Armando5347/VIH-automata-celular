@@ -1,9 +1,34 @@
 #include <iostream>
-using namespace std;
-
 #include "automata_celular.cpp"
 
+using namespace std;
 
+void mostrar_matriz(celula **matriz_celulas, int L) {
+    for (int i = 0; i < L; i++) {
+        for (int j = 0; j < L; j++) {
+            char simbolo;
+            switch (matriz_celulas[i][j].get_estado()) {
+                case celula::estado_celula_sana:
+                    simbolo = 'S';
+                    break;
+                case celula::estado_celula_infentada_A:
+                    simbolo = 'A';
+                    break;
+                case celula::estado_celula_infectada_B:
+                    simbolo = 'B';
+                    break;
+                case celula::estado_celula_muerta:
+                    simbolo = 'M';
+                    break;
+                default:
+                    simbolo = '?';
+                    break;
+            }
+            cout << simbolo << "|";
+        }
+        cout << endl;
+    }
+}
 
 int main() {
     srand(time(NULL)); // Inicializar la semilla para números aleatorios
@@ -11,58 +36,37 @@ int main() {
     int L;
     short int RA, RB;
     int t;
-    double pinfec, pvih;
-    /*
+    double pinfec, prepl, pVIH;
+
     cout << "Ingrese el tamaño de la matriz (L): ";
     cin >> L;
-
     cout << "Ingrese el número de células infectadas tipo A necesarias para infectar a una célula sana (RA): ";
     cin >> RA;
-
     cout << "Ingrese el número de células infectadas tipo B necesarias para infectar a una célula sana (RB): ";
     cin >> RB;
-
     cout << "Ingrese el número de 'time steps' necesarios para que una célula infectada tipo A se transforme en una célula infectada tipo B (t): ";
     cin >> t;
-
     cout << "Ingrese la probabilidad de que una célula muerta sea reemplazada por una célula infectada (pinfec): ";
     cin >> pinfec;
+    cout << "Porcion de celulas infectadas en la matriz inicial: ";
+    cin >> pVIH;
 
-    */
-    int ele = 5;
-    //lo voy a ser estatico momentaneamente
-    automata_celular modelo_VIH(ele, 1, 4, 4, 0.01, 0.05);
-    celula **matriz_celulas;
-    matriz_celulas = modelo_VIH.get_matriz_celular();
-    for (int i = 0; i < ele; i++)
+    automata_celular modelo_VIH(L, RA, RB, t, pinfec, pVIH);
+    celula **matriz_celulas = modelo_VIH.get_matriz_celular();
+
+    cout << "Matriz inicial:" << endl;
+    mostrar_matriz(matriz_celulas, L);
+
+    // Ejecuta el modelo una vez
+    for(int i=0; i< 100; i++)
     {
-        for (int j = 0; j < ele; j++)
-        {
-            cout<<matriz_celulas[i][j].get_estado()<<"|";
-        }
-        cout <<endl;
-    }
-    
-    //modelo_VIH
-
-    int bandera_finalizacion = 0;
-    while (bandera_finalizacion == 0) {
-        // Cada iteración es un periodo
+         printf("\nITERACION NUMERO %d\n",i+1);
         modelo_VIH.actualizar_automata();
+        mostrar_matriz(matriz_celulas, L);
+    }
 
-        // Algo para esperar (por ejemplo, un temporizador)
-        // Algo que asigne bandera_finalizacion igual a uno (por ejemplo, una condición de parada)
-        bandera_finalizacion = 1;
-    }
-    cout<<"Despues de 1 semana"<<endl;
-    for (int i = 0; i < ele; i++)
-    {
-        for (int j = 0; j < ele; j++)
-        {
-            cout<<matriz_celulas[i][j].get_estado()<<"|";
-        }
-        cout <<endl;
-    }
+
 
     return 0;
 }
+
