@@ -39,10 +39,14 @@ public:
             }
         }
         //se colocan las primeras celulas infectadas
-        int total_celulas_infectadas = (L * L * p_vih) / 1; //funcion piso improvisada
-        while (total_celulas_infectadas > 0){
-            matriz_celulas[rand() % L][rand() % L].set_estado(celula::estado_celula_infentada_A);
-            total_celulas_infectadas-- ;
+        int total_celulas_infectadas_iniciales = (L * L * p_vih) / 1; //funcion piso improvisada
+        while (total_celulas_infectadas_iniciales > 0){
+            int rand_x, rand_y;
+            rand_x = rand() % L;
+            rand_y = rand() % L;
+            if(matriz_celulas[rand_x][rand_y].get_estado()!= celula::estado_celula_infentada_A) //si no esta infectada (es aleatorio, pero por si las dudas)
+                matriz_celulas[rand_x][rand_y].set_estado(celula::estado_celula_infentada_A); //alguna celula se infecta
+            total_celulas_infectadas_iniciales-- ;
         }
     }
 
