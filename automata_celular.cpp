@@ -18,17 +18,18 @@ private:
     int _t; //número de "time steps" necesarios para que una célula infectada tipo A se transforme en una célula infectada tipo B
     double _prepl; //probabilidad de que una célula muerta sea reemplazada por una célula sana
     double _pinfec; //probabilidad de que una célula muerta sea reemplazada por una célula infectada
-
+    double _pVIH; //proporcion de celulas infectadas en la matriz de celulas sanas
 public:
     automata_celular(){}
 
-    automata_celular(int L, short ra, short rb, int t, double p_infec){
+    automata_celular(int L, short ra, short rb, int t, double p_infec, double p_vih){
         this->_L = L;
         this->_RA = ra;
         this->_RB = rb;
         this->_t = t;
         this->_pinfec = p_infec;
         this->_prepl = 1 - p_infec;
+        this->_pVIH = p_vih;
         this->matriz_celulas = new celula*[L]; //se inicializa la matriz de células
         for (int i = 0; i < L; i++){
             this->matriz_celulas[i] = new celula[L];
@@ -42,19 +43,19 @@ public:
     //este método ocurre cada "time step"
     void actualizar_automata(){
         int iterador1, iterador2;
+        //primero se calculan los valores futuros
         for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
-        {
             for ( iterador2 = 0; iterador2 < this->_L; iterador2++)
-            {
-                actualizar_celula(this->matriz_celulas[iterador1][iterador2], iterador1, iterador2);
-            }
-                
-        }
+                actualizar_celula(&this->matriz_celulas[iterador1][iterador2], iterador1, iterador2);    
+        //luego, se actualizan los valores
+        for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
+            for ( iterador2 = 0; iterador2 < this->_L; iterador2++)
+                matriz_celulas[iterador1][iterador2].set_estado(matriz_celulas[iterador1][iterador2].get_estado_futuro());
         
     }
 
     //analizar vecindad de Moore
-    void analizar_vecindad(int pos_x, int pos_y, short int &celulas_infectadas_adyacentes_tipo_A, short int &celulas_infectadas_adyacentes_tipo_B) {
+    void analizar_vecindad(int pos_x, int pos_y, short int *celulas_infectadas_adyacentes_tipo_A, short int *celulas_infectadas_adyacentes_tipo_B) {
         // Iterar sobre las 8 celdas vecinas
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -68,41 +69,42 @@ public:
                 celula &vecino = matriz_celulas[vecino_x][vecino_y];
 
                 if (vecino.get_estado() == celula::estado_celula_infentada_A) {
-                    celulas_infectadas_adyacentes_tipo_A++;
+                    *celulas_infectadas_adyacentes_tipo_A++;
                 } else if (vecino.get_estado() == celula::estado_celula_infectada_B) {
-                    celulas_infectadas_adyacentes_tipo_B++;
+                    *celulas_infectadas_adyacentes_tipo_B++;
                 }
             }
         }
     }
 
-    void actualizar_celula(celula &celula_a_actualizar, int pos_x, int pos_y){
+    void actualizar_celula(celula *celula_a_actualizar, int pos_x, int pos_y){
+        celula_a_actualizar->set_estado_futuro(celula_a_actualizar->get_estado()); //se plantea que, en principio, no cambia de estado
         short int celulas_infectadas_adyacentes_tipo_A = 0;
         short int celulas_infectadas_adyacentes_tipo_B = 0;
-        analizar_vecindad(pos_x, pos_y, celulas_infectadas_adyacentes_tipo_A, celulas_infectadas_adyacentes_tipo_B);
+        analizar_vecindad(pos_x, pos_y, &celulas_infectadas_adyacentes_tipo_A, &celulas_infectadas_adyacentes_tipo_B);
 
-        switch (celula_a_actualizar.get_estado())
+        switch (celula_a_actualizar->get_estado())
         {
-            case celula::estado_celula_sana :
+            case celula::estado_celula_sana:
             {
                 // Aplicar las reglas de cambio de estado
                 if (celulas_infectadas_adyacentes_tipo_A >= _RA || celulas_infectadas_adyacentes_tipo_B >= _RB) {
-                    celula_a_actualizar.set_estado(celula::estado_celula_infentada_A);
+                    celula_a_actualizar->set_estado_futuro(celula::estado_celula_infentada_A);
                 }
                 break;
             }
             case celula::estado_celula_infentada_A :
             {
                 //se revisa si pasaron los 't' periodos o no
-                if(celula_a_actualizar.get_periodo() > 0)
-                    celula_a_actualizar.paso_periodo();
+                if(celula_a_actualizar->get_periodo() > 0)
+                    celula_a_actualizar->paso_periodo();
                 else
-                    celula_a_actualizar.set_estado(celula::estado_celula_infectada_B);
+                    celula_a_actualizar->set_estado_futuro(celula::estado_celula_infectada_B);
                 break;
             }
             case celula::estado_celula_infectada_B :
             {
-                celula_a_actualizar.set_estado(celula::estado_celula_muerta);
+                celula_a_actualizar->set_estado_futuro(celula::estado_celula_muerta);
                 break;
             }
             case celula::estado_celula_muerta:
@@ -112,9 +114,9 @@ public:
 
                 // Comparar el número aleatorio con las probabilidades
                 if (random_prob <= _pinfec) {
-                    celula_a_actualizar.set_estado(celula::estado_celula_infentada_A); // Reemplazar por una célula infectada tipo A
+                    celula_a_actualizar->set_estado_futuro(celula::estado_celula_infentada_A); // Reemplazar por una célula infectada tipo A
                 } else if (random_prob <= (_pinfec + _prepl)) {
-                    celula_a_actualizar.set_estado(celula::estado_celula_sana); // Reemplazar por una célula sana
+                    celula_a_actualizar->set_estado_futuro(celula::estado_celula_sana); // Reemplazar por una célula sana
                 }
                 break;
             }
@@ -125,7 +127,9 @@ public:
     }
 
     //faltan getters y setters    
-
+    celula** get_matriz_celular(){
+        return this->matriz_celulas;
+    }
 };
 
                 

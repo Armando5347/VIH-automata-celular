@@ -9,7 +9,7 @@ int main() {
     int L;
     short int RA, RB;
     int t;
-    double pinfec;
+    double pinfec, pvih;
 
     cout << "Ingrese el tamaño de la matriz (L): ";
     cin >> L;
@@ -26,7 +26,9 @@ int main() {
     cout << "Ingrese la probabilidad de que una célula muerta sea reemplazada por una célula infectada (pinfec): ";
     cin >> pinfec;
 
-    automata_celular modelo_VIH(L, RA, RB, t, pinfec);
+    //lo voy a ser estatico momentaneamente
+    automata_celular modelo_VIH(10, 1, 4, 4, 0.01, 0.05);
+    //modelo_VIH
 
     int bandera_finalizacion = 0;
     while (bandera_finalizacion == 0) {
@@ -35,7 +37,7 @@ int main() {
 
         // Algo para esperar (por ejemplo, un temporizador)
         // Algo que asigne bandera_finalizacion igual a uno (por ejemplo, una condición de parada)
-
+        bandera_finalizacion = 1;
     }
 
     return 0;

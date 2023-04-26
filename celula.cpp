@@ -9,6 +9,7 @@ class celula
 {
 private:
     short int _estado;
+    short int _estado_futuro;
     int _periodos;
     //objeto de interfaz
 public:
@@ -37,6 +38,16 @@ public:
     // Establecer el estado de la celula
     void set_estado(short int nuevo_estado){
         this->_estado = nuevo_estado;
+    }
+
+    // Obtener el estado futuro de la celulca
+    short int get_estado_futuro(){
+        return this->_estado_futuro;
+    }
+
+    // Establecer el estado al cual va a cambiar la celula
+    void set_estado_futuro(short int nuevo_estado){
+        this->_estado_futuro = nuevo_estado;
     }
 
     // Obtener el número de periodos restantes para una celula infectada tipo A
