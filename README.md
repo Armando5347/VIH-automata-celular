@@ -23,6 +23,7 @@ Entrada:
 + t: Número de time steps que tarda el sistema inmunológico en desarrollar una respuesta específica a un antígeno.
 + Prepl: Probabilidad de que una célula muerta sea reemplazada por una nueva célula.
 + Pinfec: Probabilidad de que una nueva célula sea infectada tipo A.
++ PVIH : Porcentaje de celulas infectadas en la matriz inicial.
 
 Salida:
 La simulación del autómata celular que muestra la evolución de las células en la malla cuadrada a lo largo del tiempo, similar a una animación del juego de la vida de Conway y una grafica que compare cell densities vs semanas y años
