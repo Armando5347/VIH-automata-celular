@@ -1,6 +1,6 @@
 /**Archivo que describe la clase automata celular
- * 
- * 
+ *
+ *
 */
 #include "celula.cpp"
 #include <cstdlib>
@@ -56,40 +56,39 @@ public:
         //primero se calculan los valores futuros
         for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
             for ( iterador2 = 0; iterador2 < this->_L; iterador2++)
-                actualizar_celula(&this->matriz_celulas[iterador1][iterador2], iterador1, iterador2);    
+                actualizar_celula(&this->matriz_celulas[iterador1][iterador2], iterador1, iterador2);
         //luego, se actualizan los valores
         for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
             for ( iterador2 = 0; iterador2 < this->_L; iterador2++)
                 this->matriz_celulas[iterador1][iterador2].set_estado(this->matriz_celulas[iterador1][iterador2].get_estado_futuro());
-        
+
     }
 
-    //analizar vecindad de Moore -- ACTUALMENTE NO SE USA
-    void analizar_vecindad(int pos_x, int pos_y, short int *celulas_infectadas_adyacentes_tipo_A, short int *celulas_infectadas_adyacentes_tipo_B) {
-        // Iterar sobre las 8 celdas vecinas
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                // Evitar la celda central (0, 0)
-                if (dx == 0 && dy == 0) continue;
-                int vecino_x = (pos_x + dx + this->_L) % this->_L;
-                int vecino_y = (pos_y + dy + this->_L) % this->_L;
+void analizar_vecindad(int pos_x, int pos_y, short int& celulas_infectadas_adyacentes_tipo_A, short int& celulas_infectadas_adyacentes_tipo_B) {
+    // Iterar sobre las 8 celdas vecinas
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            // Evitar la celda central (0, 0)
+            if (dx == 0 && dy == 0) continue;
+            int vecino_x = (pos_x + dx + this->_L) % this->_L;
+            int vecino_y = (pos_y + dy + this->_L) % this->_L;
 
-                // No es necesario verificar si esta dentro de la matriz ya que con el modulo funciona como un toroide
-                celula vecino = this->matriz_celulas[vecino_x][vecino_y];
-                cout<<"\t\t\t\t"<<vecino.get_estado()<<endl;
-                if (vecino.get_estado() == celula::estado_celula_infentada_A) {
-                    *celulas_infectadas_adyacentes_tipo_A ++;
-                } else if (vecino.get_estado() == celula::estado_celula_infectada_B) {
-                    *celulas_infectadas_adyacentes_tipo_B ++;
-                }
+            // No es necesario verificar si esta dentro de la matriz ya que con el modulo funciona como un toroide
+            celula vecino = this->matriz_celulas[vecino_x][vecino_y];
+            // cout<<"\t\t\t\t"<<vecino.get_estado()<<endl; --este cout muestra el estado de la celula vecina
+            if (vecino.get_estado() == celula::estado_celula_infentada_A) {
+                celulas_infectadas_adyacentes_tipo_A ++;
+            } else if (vecino.get_estado() == celula::estado_celula_infectada_B) {
+                celulas_infectadas_adyacentes_tipo_B ++;
             }
         }
-        
     }
+}
+
 
     void actualizar_celula(celula *celula_a_actualizar, int pos_x, int pos_y){
         celula_a_actualizar->set_estado_futuro(celula_a_actualizar->get_estado()); //se plantea que, en principio, no cambia de estado
-        cout<< "\tAnalizar la celula ["<<pos_x<<"]["<<pos_y<<"]"<<endl; 
+        //cout<< "\tAnalizar la celula ["<<pos_x<<"]["<<pos_y<<"]"<<endl;
         short int celulas_infectadas_adyacentes_tipo_A = (short) 0;
         short int celulas_infectadas_adyacentes_tipo_B = (short) 0;
         switch (celula_a_actualizar->get_estado() ) {
@@ -115,10 +114,10 @@ public:
                     }
                 }
 
-                cout<<"\t\tTiene "<<celulas_infectadas_adyacentes_tipo_A<<" celulas infectadas tipo A cercanas"<<endl;
+                //cout<<"\t\tTiene "<<celulas_infectadas_adyacentes_tipo_A<<" celulas infectadas tipo A cercanas"<<endl;
                 // Aplicar las reglas de cambio de estado
                 if (celulas_infectadas_adyacentes_tipo_A >= _RA || celulas_infectadas_adyacentes_tipo_B >= _RB) {
-                    cout<<"\t\t\tSe infecto"<<endl;
+                    //cout<<"\t\t\tSe infecto"<<endl;
                     celula_a_actualizar->set_estado_futuro(celula::estado_celula_infentada_A);
                 }
                 break;
@@ -156,11 +155,12 @@ public:
         }
     }
 
-    //faltan getters y setters    
+    //faltan getters y setters
     celula** get_matriz_celular(){
         return this->matriz_celulas;
     }
 };
+
 
                 
 
