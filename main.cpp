@@ -29,15 +29,14 @@ int main() {
     cin >> pinfec;
 
     */
-
+    int ele = 5;
     //lo voy a ser estatico momentaneamente
-    automata_celular modelo_VIH(10, 1, 4, 4, 0.01, 0.05);
+    automata_celular modelo_VIH(ele, 1, 4, 4, 0.01, 0.05);
     celula **matriz_celulas;
     matriz_celulas = modelo_VIH.get_matriz_celular();
-    cout <<"Waos: "<<celula::estado_celula_infentada_A<<endl;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < ele; i++)
     {
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < ele; j++)
         {
             cout<<matriz_celulas[i][j].get_estado()<<"|";
         }
@@ -56,9 +55,9 @@ int main() {
         bandera_finalizacion = 1;
     }
     cout<<"Despues de 1 semana"<<endl;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < ele; i++)
     {
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < ele; j++)
         {
             cout<<matriz_celulas[i][j].get_estado()<<"|";
         }
