@@ -3,9 +3,9 @@
  * 
 */
 #include "celula.cpp"
-#include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 using namespace std;
 
 class automata_celular
@@ -76,8 +76,7 @@ public:
                 int vecino_y = (pos_y + dy + _L) % _L;
 
                 // No es necesario verificar si esta dentro de la matriz ya que con el modulo funciona como un toroide
-                celula &vecino = matriz_celulas[vecino_x][vecino_y];
-
+                celula vecino = matriz_celulas[vecino_x][vecino_y];
                 if (vecino.get_estado() == celula::estado_celula_infentada_A) {
                     *celulas_infectadas_adyacentes_tipo_A++;
                 } else if (vecino.get_estado() == celula::estado_celula_infectada_B) {
@@ -89,16 +88,18 @@ public:
 
     void actualizar_celula(celula *celula_a_actualizar, int pos_x, int pos_y){
         celula_a_actualizar->set_estado_futuro(celula_a_actualizar->get_estado()); //se plantea que, en principio, no cambia de estado
+        cout<< "\tAnalizar la celula ["<<pos_x<<"]["<<pos_y<<"]"<<endl; 
         short int celulas_infectadas_adyacentes_tipo_A = 0;
         short int celulas_infectadas_adyacentes_tipo_B = 0;
         analizar_vecindad(pos_x, pos_y, &celulas_infectadas_adyacentes_tipo_A, &celulas_infectadas_adyacentes_tipo_B);
 
-        switch (celula_a_actualizar->get_estado())
-        {
+        switch (celula_a_actualizar->get_estado() ) {
             case celula::estado_celula_sana:
             {
+                cout<<"\t\tTiene "<<celulas_infectadas_adyacentes_tipo_A<<"celulas infectadas tipo A cercanas"<<endl;
                 // Aplicar las reglas de cambio de estado
                 if (celulas_infectadas_adyacentes_tipo_A >= _RA || celulas_infectadas_adyacentes_tipo_B >= _RB) {
+                    cout<<"\t\t\tSe infecto"<<endl;
                     celula_a_actualizar->set_estado_futuro(celula::estado_celula_infentada_A);
                 }
                 break;

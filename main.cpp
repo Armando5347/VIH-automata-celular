@@ -1,7 +1,9 @@
 #include <iostream>
+using namespace std;
+
 #include "automata_celular.cpp"
 
-using namespace std;
+
 
 int main() {
     srand(time(NULL)); // Inicializar la semilla para números aleatorios
@@ -10,7 +12,7 @@ int main() {
     short int RA, RB;
     int t;
     double pinfec, pvih;
-
+    /*
     cout << "Ingrese el tamaño de la matriz (L): ";
     cin >> L;
 
@@ -26,8 +28,22 @@ int main() {
     cout << "Ingrese la probabilidad de que una célula muerta sea reemplazada por una célula infectada (pinfec): ";
     cin >> pinfec;
 
+    */
+
     //lo voy a ser estatico momentaneamente
     automata_celular modelo_VIH(10, 1, 4, 4, 0.01, 0.05);
+    celula **matriz_celulas;
+    matriz_celulas = modelo_VIH.get_matriz_celular();
+    cout <<"Waos: "<<celula::estado_celula_infentada_A<<endl;
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            cout<<matriz_celulas[i][j].get_estado()<<"|";
+        }
+        cout <<endl;
+    }
+    
     //modelo_VIH
 
     int bandera_finalizacion = 0;
@@ -38,6 +54,15 @@ int main() {
         // Algo para esperar (por ejemplo, un temporizador)
         // Algo que asigne bandera_finalizacion igual a uno (por ejemplo, una condición de parada)
         bandera_finalizacion = 1;
+    }
+    cout<<"Despues de 1 semana"<<endl;
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            cout<<matriz_celulas[i][j].get_estado()<<"|";
+        }
+        cout <<endl;
     }
 
     return 0;
