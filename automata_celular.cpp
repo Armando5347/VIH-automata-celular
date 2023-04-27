@@ -8,6 +8,14 @@
 #include <iostream>
 using namespace std;
 
+
+
+struct nodo_densidad{
+    double densidas_celulas_sanas;
+    double densidas_celulas_infectadas;
+    double densidas_celulas_muertas;
+    nodo_densidad* sig_densidad;
+};
 class automata_celular
 {
 private:
@@ -19,6 +27,9 @@ private:
     double _prepl; //probabilidad de que una célula muerta sea reemplazada por una célula sana
     double _pinfec; //probabilidad de que una célula muerta sea reemplazada por una célula infectada
     double _pVIH; //proporcion de celulas infectadas en la matriz de celulas sanas
+    nodo_densidad* cabecera_densidades;
+    nodo_densidad* densidad_actual;
+    nodo_densidad* nodo_densidad_auxiliar;
 public:
     automata_celular(){}
 
@@ -40,6 +51,12 @@ public:
         }
         //se colocan las primeras celulas infectadas
         int total_celulas_infectadas_iniciales = (L * L * p_vih) / 1; //funcion piso improvisada
+
+        this->cabecera_densidades = new (nodo_densidad);
+        this->cabecera_densidades->densidas_celulas_sanas = ( L*L - total_celulas_infectadas_iniciales ) / L*L;
+        this->cabecera_densidades->densidas_celulas_infectadas = total_celulas_infectadas_iniciales / L * L;
+        this->cabecera_densidades->densidas_celulas_muertas = 0;
+        this->densidad_actual = this->cabecera_densidades;
         while (total_celulas_infectadas_iniciales > 0){
             int rand_x, rand_y;
             rand_x = rand() % L;
@@ -48,6 +65,7 @@ public:
                 matriz_celulas[rand_x][rand_y].set_estado(celula::estado_celula_infentada_A); //alguna celula se infecta
             total_celulas_infectadas_iniciales-- ;
         }
+
     }
 
     //este método ocurre cada "time step"
@@ -57,11 +75,33 @@ public:
         for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
             for ( iterador2 = 0; iterador2 < this->_L; iterador2++)
                 actualizar_celula(&this->matriz_celulas[iterador1][iterador2], iterador1, iterador2);
-        //luego, se actualizan los valores
-        for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
-            for ( iterador2 = 0; iterador2 < this->_L; iterador2++)
-                this->matriz_celulas[iterador1][iterador2].set_estado(this->matriz_celulas[iterador1][iterador2].get_estado_futuro());
+        //se instancia un nuevo nodo de densidad (suponiendo que se mida por semanas  )
 
+        nodo_densidad_auxiliar = this->densidad_actual;
+        this->densidad_actual = new (nodo_densidad);
+        this->nodo_densidad_auxiliar->sig_densidad = this->densidad_actual;
+        this->densidad_actual->sig_densidad = NULL;
+        this->densidad_actual->densidas_celulas_infectadas = 0;
+        this->densidad_actual->densidas_celulas_sanas = 0;
+        this->densidad_actual->densidas_celulas_muertas = 0;
+        //inicializar en CERO las densidades
+        //luego, se actualizan los valores
+        int new_estado;
+        for ( iterador1 = 0; iterador1 < this->_L; iterador1++)
+            for ( iterador2 = 0; iterador2 < this->_L; iterador2++){
+                new_estado = this->matriz_celulas[iterador1][iterador2].get_estado_futuro();
+                this->matriz_celulas[iterador1][iterador2].set_estado(new_estado);
+                if(new_estado == celula::estado_celula_sana){
+                    this->densidad_actual->densidas_celulas_sanas ++;
+                }else if (new_estado == celula::estado_celula_muerta)
+                    this->densidad_actual->densidas_celulas_muertas  ++;
+                else
+                    this->densidad_actual->densidas_celulas_infectadas ++;
+            }
+        //dividir entre L * L cada densidad
+        this->densidad_actual->densidas_celulas_infectadas /= this->_L * this->_L;
+        this->densidad_actual->densidas_celulas_sanas /=  this->_L * this->_L;
+        this->densidad_actual->densidas_celulas_muertas /=  this->_L * this->_L;
     }
 
 void analizar_vecindad(int pos_x, int pos_y, short int& celulas_infectadas_adyacentes_tipo_A, short int& celulas_infectadas_adyacentes_tipo_B) {
@@ -159,8 +199,12 @@ void analizar_vecindad(int pos_x, int pos_y, short int& celulas_infectadas_adyac
     celula** get_matriz_celular(){
         return this->matriz_celulas;
     }
-};
 
+    nodo_densidad* get_densidad_actual(){
+        return this->densidad_actual;
+    }
+
+};
 
                 
 
