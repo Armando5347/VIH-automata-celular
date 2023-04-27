@@ -58,15 +58,18 @@ int main() {
     mostrar_matriz(matriz_celulas, L);
 
     // Ejecuta el modelo una vez
-    for(int i=0; i< 100; i++)
+    for(int i=0; i< 104; i++)
     {
          printf("\nITERACION NUMERO %d\n",i+1);
         modelo_VIH.actualizar_automata();
         mostrar_matriz(matriz_celulas, L);
+        cout << "Densidades actuales: " << endl;
+cout << "Sanas:" << modelo_VIH.get_densidad_actual()->densidas_celulas_sanas<< endl;
+cout << "Infectadas:" << modelo_VIH.get_densidad_actual()->densidas_celulas_infectadas<< endl;
+cout << "Muertas:" << modelo_VIH.get_densidad_actual()->densidas_celulas_muertas<< endl;
     }
 
 
 
     return 0;
 }
-
