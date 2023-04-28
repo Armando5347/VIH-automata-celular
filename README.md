@@ -1,5 +1,5 @@
 # VIH-automata-celular
-Objetivo: Crear un programa en C++ que implemente un autómata celular para simular la infección por el VIH en el cuerpo humano.
+Objetivo: Crear un programa en JAVA que implemente un autómata celular para simular la infección por el VIH en el cuerpo humano.
 
 Descripción del Autómata:
 + El autómata se representa en una malla cuadrada de tamaño L x L, donde cada sitio representa una célula en los tejidos linfáticos.
