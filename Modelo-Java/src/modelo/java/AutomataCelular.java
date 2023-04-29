@@ -144,7 +144,7 @@ void actualizar_celula(Celula celula_a_actualizar, int pos_x, int pos_y) {
             case Celula.ESTADO_CELULA_SANA:
                 analizar_vecindad(pos_x, pos_y, celulas_infectadas_adyacentes_tipo_A, celulas_infectadas_adyacentes_tipo_B);
                 if (celulas_infectadas_adyacentes_tipo_A[0] >= this.RA || celulas_infectadas_adyacentes_tipo_B[0] >= this.RB) {
-                    celula_a_actualizar.setEstadoFuturo(Celula.ESTADO_CELULA_INFECTADA_B);
+                    celula_a_actualizar.setEstadoFuturo(Celula.ESTADO_CELULA_INFECTADA_A);
                 }
                 break;
 
