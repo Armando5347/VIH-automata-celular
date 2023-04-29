@@ -4,6 +4,7 @@
  * 
  */
 package modelo.java;
+import java.awt.Color;
 import javax.swing.JPanel;
 
 public class Celula {
@@ -22,6 +23,8 @@ public class Celula {
         estadoFuturo = ESTADO_CELULA_SANA;
         periodosRestantes = 0;
         representacionGrafica = new JPanel();
+        representacionGrafica.setBackground(Color.BLUE);
+        representacionGrafica.setBorder(Auxiliar.BORDE_LIGERO);
     }
 
     public int getEstado() {
@@ -30,6 +33,19 @@ public class Celula {
 
     public void setEstado(int estado) {
         this.estado = estado;
+        switch(estado){
+            case 0:
+                this.representacionGrafica.setBackground(Color.BLUE);
+                break;
+            case 1:
+                this.representacionGrafica.setBackground(Color.YELLOW);
+                break;
+            case 2:
+                this.representacionGrafica.setBackground(Color.GREEN);
+                break;
+            case 3:
+                this.representacionGrafica.setBackground(Color.RED);
+        }
     }
 
     public int getEstadoFuturo() {

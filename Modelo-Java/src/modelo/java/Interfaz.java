@@ -8,11 +8,8 @@ package modelo.java;
 //librerias importadas
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,8 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
 /**
  *
@@ -69,10 +64,9 @@ public class Interfaz extends Thread{
     public void run() {
         ventana.setBackground(Color.black);
         ventana.setLayout(Auxiliar.LAYOUT);
-        titulo.setBackground(Color.black);
-        titulo.setForeground(Color.white);
-        titulo.setFont(Auxiliar.FUENTE_TITULO);
-        contenedorTitulo.add(titulo);
+        
+        Auxiliar.asignarEstiloLabel(titulo, Auxiliar.FUENTE_TITULO, contenedorTitulo);
+        
         contenedorTitulo.setBorder(Auxiliar.BORDE);
         contenedorTitulo.setBackground(Color.black);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,31 +94,31 @@ public class Interfaz extends Thread{
         
        Auxiliar.asignarEstiloTextLabel(valor_Lattice, Auxiliar.FUENTE_TEXTO, panelOpciones1);
         
-        asignarEstiloLabel(nombrePorcionVIH, FUENTE_TEXTO, panelOpciones1);
+        Auxiliar.asignarEstiloLabel(nombrePorcionVIH, Auxiliar.FUENTE_TEXTO, panelOpciones1);
         
         
         
-        asignarEstiloSlider(valor_pVIH,panelOpciones1, 10, 1);
+        Auxiliar.asignarEstiloSlider(valor_pVIH,panelOpciones1, 10, 1);
         
-        asignarEstiloLabel(nombreProbabilidadCelulaInfectada, FUENTE_TEXTO, panelOpciones1);
-        asignarEstiloSlider(valor_P_infec, panelOpciones1, 10, 1);
+        Auxiliar.asignarEstiloLabel(nombreProbabilidadCelulaInfectada, Auxiliar.FUENTE_TEXTO, panelOpciones1);
+        Auxiliar.asignarEstiloSlider(valor_P_infec, panelOpciones1, 10, 1);
         
         panelPrincipal.add(panelOpciones1); // se acplola el primer panel de opciones
         
         //panel opciones dos
-        asignarEstiloLabel(nombreResistenciaTipoA, FUENTE_TEXTO, panelOpciones2);
+        Auxiliar.asignarEstiloLabel(nombreResistenciaTipoA, Auxiliar.FUENTE_TEXTO, panelOpciones2);
         
-        asignarEstiloSlider(valor_RA, panelOpciones2, 8, 1);
+        Auxiliar.asignarEstiloSlider(valor_RA, panelOpciones2, 8, 1);
         
-        asignarEstiloLabel(nombreResistenciaTipoB, FUENTE_TEXTO, panelOpciones2);
+        Auxiliar.asignarEstiloLabel(nombreResistenciaTipoB, Auxiliar.FUENTE_TEXTO, panelOpciones2);
         
-        asignarEstiloSlider(valor_RB, panelOpciones2, 8, 1);
+        Auxiliar.asignarEstiloSlider(valor_RB, panelOpciones2, 8, 1);
         
         panelPrincipal.add(panelOpciones2); // se acopla el segundo panle de opciones
         
-        asignarEstiloLabel(nombreTimesSteps, FUENTE_TEXTO, panelOpciones2);
+        Auxiliar.asignarEstiloLabel(nombreTimesSteps, Auxiliar.FUENTE_TEXTO, panelOpciones2);
         
-        asignarEstiloTextLabel(valor_T, FUENTE_TEXTO, panelOpciones2);
+        Auxiliar.asignarEstiloTextLabel(valor_T, Auxiliar.FUENTE_TEXTO, panelOpciones2);
         
         ventana.add(panelPrincipal,BorderLayout.CENTER);
         

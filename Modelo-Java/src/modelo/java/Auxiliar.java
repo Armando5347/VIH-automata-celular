@@ -9,7 +9,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,13 +26,13 @@ public class Auxiliar {
     public static final Font FUENTE_MINI = new Font("Verdana", Font.PLAIN, 10);
     
     public static final Border BORDE = BorderFactory.createLineBorder(Color.darkGray,3);
+    public static final Border BORDE_LIGERO = BorderFactory.createLineBorder(Color.BLACK, 1);
     
     public static final Border BORDE_COMPUESTO = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
     public static final BorderLayout LAYOUT = new BorderLayout(0, 0);
     
-    public static GridLayout layoutMalla;
     
-    public final Dimension tamanioMaximoInput = new Dimension(3000, 40);
+    public static final Dimension TAMANIO_MAXIMO_INPUT = new Dimension(3000, 40);
     
     //funciones de diseño
     public static void asignarEstiloLabel(JLabel labelObjetivo, Font fuente, JPanel panelDestino){
@@ -48,7 +47,7 @@ public class Auxiliar {
         input.setBackground(Color.BLACK);
         input.setForeground(Color.WHITE);
         input.setFont(fuente);
-        input.setMaximumSize(tamanioMaximoInput);
+        input.setMaximumSize(TAMANIO_MAXIMO_INPUT);
         panelDestino.add(input);
     }
     

@@ -51,13 +51,12 @@ public class AutomataCelular {
         int totalCelulasInfectadas = (int) (L * L * p_vih);
         int celulasInfectadas = 0;
 
-        while (celulasInfectadas < totalCelulasInfectadas) {
+        while (celulasInfectadas <= totalCelulasInfectadas) {
             int i = random.nextInt(L);
             int j = random.nextInt(L);
 
             if (matrizCelulas[i][j].getEstado() == Celula.ESTADO_CELULA_SANA) {
-                matrizCelulas[i][j].setEstado(Celula.ESTADO_CELULA_SANA);
-
+                matrizCelulas[i][j].setEstado(Celula.ESTADO_CELULA_INFECTADA_A);
                 celulasInfectadas++;
             }
         }
@@ -164,20 +163,28 @@ public void imprimirDensidades() {
     nodo = cabeceraDensidades;
     System.out.println("Tiempo\tSanas\t\tInfectadas\tMuertas");
     while (nodo != null) {
-System.out.printf("%d\t%.6f\t%.6f\t%.6f\n", tiempo, nodo.getDensidadCelulasSanas(), nodo.getDensidadCelulasInfectadas(), nodo.getDensidadCelulasMuertas());
-nodo = nodo.getSiguiente();
-tiempo++;
-}
-}
-public void imprimirMatriz() {
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
-            System.out.print(matrizCelulas[i][j].getEstado() + " ");
-        }
-        System.out.println();
+    System.out.printf("%d\t%.6f\t%.6f\t%.6f\n", tiempo, nodo.getDensidadCelulasSanas(), nodo.getDensidadCelulasInfectadas(), nodo.getDensidadCelulasMuertas());
+    nodo = nodo.getSiguiente();
+    tiempo++;
     }
 }
+    public void imprimirMatriz() {
+        for (int i = 0; i < L; i++) {
+            for (int j = 0; j < L; j++) {
+                System.out.print(matrizCelulas[i][j].getEstado() + " ");
+            }
+            System.out.println();
+        }
+    }
+    public int getL(){
+        return this.L;
+    }
 
+    public Celula[][] getMatrizCelulas() {
+        return this.matrizCelulas;
+    }
+    
+    
 }
 
 
