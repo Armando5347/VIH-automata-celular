@@ -19,6 +19,8 @@ public class Celula {
     private int estadoFuturo;
     private int periodosRestantes;
     private JPanel representacionGrafica;
+    
+    public static final Color COLORES[] = {Color.BLUE, Color.YELLOW, Color.GREEN, Color.RED};
 
     // Constructor de la célula, inicializa los valores de la célula
     public Celula() {
@@ -37,6 +39,7 @@ public class Celula {
 
     public void setEstado(int estado) {
         this.estado = estado;
+<<<<<<< Updated upstream
         // Cambiar el color de la representación gráfica de la célula según su estado
         switch(estado){
             case 0:
@@ -51,6 +54,11 @@ public class Celula {
             case 3:
                 this.representacionGrafica.setBackground(Color.RED);
         }
+=======
+        this.representacionGrafica.setBackground(COLORES[estado]);
+        this.representacionGrafica.repaint();
+        this.representacionGrafica.updateUI();
+>>>>>>> Stashed changes
     }
 
     // Métodos get y set para acceder y modificar el estado futuro de la célula
