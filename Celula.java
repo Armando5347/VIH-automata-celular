@@ -1,9 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package automatacelular;
 
 public class Celula {
     public static final int estado_celula_sana = 0;
     public static final int estado_celula_infentada_A = 1;
-    public static final int estado_celula_infentada_B = 2; // Corregido el nombre de la variable
+    public static final int estado_celula_infectada_B= 2; // Corregido el nombre de la variable
     public static final int estado_celula_muerta = 3;
 
     private int estado;
@@ -44,4 +49,3 @@ public class Celula {
         this.periodosRestantes--;
     }
 }
-
