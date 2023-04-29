@@ -10,11 +10,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
@@ -25,29 +29,49 @@ import javax.swing.border.Border;
  */
 public class Interfaz extends Thread{
     
-    private JFrame ventana = new JFrame("Menú principal");
-    private final JPanel contenedorTitulo = new JPanel();
-    private final JPanel acciones = new JPanel();
+    private final JFrame ventana;
+    private final JPanel contenedorTitulo;
+    private final JPanel panelPrincipal;
     
-    private JPanel firmado = new JPanel();
-    private JPanel verificados = new JPanel();
+    private JPanel panelOpciones1 = new JPanel();
+    private JPanel panelOpciones2 = new JPanel();
     
-    JLabel titulo = new JLabel("Modelo simulación expansión del VIH");
-    JLabel subtit_Firmado = new JLabel("Monitoreo de firmas");
-    JLabel subtit_Verificado = new JLabel("Monitoreo de validaciones");
+    private JLabel titulo = new JLabel("Modelo simulación expansión del VIH");
+    private JLabel nombreLattice = new JLabel("Tamaño de la cuadricula");
+    private JLabel nombrePorcionVIH = new JLabel("Porcion de celulas infectadas iniciales (1-100%)");
+    private JLabel nombreResistenciaTipoA = new JLabel("Resitencia de las celulas a la presencia de ceulas infectadas tipo A (RA)");
+    private JLabel nombreResistenciaTipoB = new JLabel("Resitencia de las celulas a la presencia de ceulas infectadas tipo B (RB)");
+    private JLabel nombreProbabilidadCelulaInfectada = new JLabel("Posibilidad de que una célula muerta sea reemeplaza por una celula infectada (0-100%)");
+    private JLabel nombreTimesSteps = new JLabel("Número de periodos (t)");
     
-    private final Font f_tit = new Font("Verdana", Font.BOLD, 50);
-    private final Font f_subtit = new Font("Verdana", Font.BOLD, 35);
-    private final Font f_txt = new Font("Verdana", Font.BOLD, 25);
+    private JTextField valor_Lattice = new JTextField("10");
+    private JTextField valor_T = new JTextField("4");
     
-    private JTextField statusFirmado = new JTextField("Sin firmar");
-    private JTextField statusVerificado = new JTextField("Sin verificar");
+    private JSlider valor_pVIH = new JSlider(JSlider.HORIZONTAL, 0, 100, 5);
+    private JSlider valor_RA = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
+    private JSlider valor_RB = new JSlider(JSlider.HORIZONTAL, 1, 9, 4);
+    private JSlider valor_P_infec = new JSlider(JSlider.HORIZONTAL, 0, 100, 1);
     
-    private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
-    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    private JButton botton_generar_automata = new JButton("Generar automata celular");
+    
+    private final Font FUENTE_TITULO = new Font("Verdana", Font.BOLD, 35);
+    private final Font FUENTE_TEXTO = new Font("Verdana", Font.PLAIN, 15);
+    private final Font FUENTE_MINI = new Font("Verdana", Font.PLAIN, 10);
+    
+    private final Border BORDE = BorderFactory.createLineBorder(Color.darkGray,3);
+    private final Border BORDE_COMPUESTO = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
     private BorderLayout layout = new BorderLayout(0, 0);
     
+    private final Dimension tamanioMaximoInput = new Dimension(3000, 40);
+    
+// Lattice, p_VIH, RA, RB, T, P_infec
+    
+    
     Interfaz(){
+        //inicializar componentes
+        this.panelPrincipal = new JPanel();
+        this.contenedorTitulo = new JPanel();
+        this.ventana = new JFrame("Menú principal");
     }
 
     @Override
@@ -56,9 +80,9 @@ public class Interfaz extends Thread{
         ventana.setLayout(layout);
         titulo.setBackground(Color.black);
         titulo.setForeground(Color.white);
-        titulo.setFont(f_tit);
+        titulo.setFont(FUENTE_TITULO);
         contenedorTitulo.add(titulo);
-        contenedorTitulo.setBorder(borde);
+        contenedorTitulo.setBorder(BORDE);
         contenedorTitulo.setBackground(Color.black);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
@@ -68,50 +92,108 @@ public class Interfaz extends Thread{
     }
 
     private void buildMain() {
-        acciones.setBackground(Color.black);
-        acciones.setLayout(new BoxLayout(acciones, BoxLayout.X_AXIS));
-        acciones.setBorder(bordeCompuesto);
-        firmado.setBackground(Color.black);
-        firmado.setLayout(new BorderLayout(5, 5));
-        firmado.setBorder(borde);
-        subtit_Firmado.setBackground(Color.black);
-        subtit_Firmado.setForeground(Color.white);
-        subtit_Firmado.setFont(f_subtit);
-        firmado.add(subtit_Firmado, BorderLayout.NORTH);
-        statusFirmado.setFont(f_txt);
-        statusFirmado.setEditable(false);
-        statusFirmado.setMaximumSize(new Dimension(200,60));
-        firmado.add(statusFirmado,BorderLayout.CENTER);
+        panelPrincipal.setBackground(Color.black);
+        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.X_AXIS));
+        panelPrincipal.setBorder(BORDE_COMPUESTO);
         
-        acciones.add(firmado);
+        panelOpciones1.setBackground(Color.black);
+        panelOpciones1.setLayout(new BoxLayout(panelOpciones1, BoxLayout.Y_AXIS));
+        panelOpciones1.setBorder(BORDE);
         
-        verificados.setBackground(Color.black);
-        verificados.setLayout(new BorderLayout(5, 5));
-        verificados.setBorder(borde);
-        subtit_Verificado.setBackground(Color.black);
-        subtit_Verificado.setForeground(Color.white);
-        subtit_Verificado.setFont(f_subtit);
-        firmado.add(subtit_Verificado, BorderLayout.NORTH);
-        statusVerificado.setFont(f_txt);
-        statusVerificado.setEditable(false);
-        statusVerificado.setMaximumSize(new Dimension(200,60));
-        verificados.add(statusVerificado,BorderLayout.CENTER);
-        acciones.add(verificados);
+        panelOpciones2.setBackground(Color.black);
+        panelOpciones2.setLayout(new BoxLayout(panelOpciones2, BoxLayout.Y_AXIS));
+        panelOpciones2.setBorder(BORDE);
         
-        subtit_Firmado.setBackground(Color.black);
-        subtit_Firmado.setForeground(Color.white);
-        subtit_Firmado.setFont(f_subtit);
-        subtit_Firmado.setHorizontalAlignment(SwingConstants.CENTER);
-        firmado.add(subtit_Firmado, BorderLayout.NORTH);
+        //panel opciones uno
+        asignarEstiloLabel(nombreLattice, FUENTE_TEXTO, panelOpciones1);
         
-        subtit_Verificado.setBackground(Color.black);
-        subtit_Verificado.setForeground(Color.white);
-        subtit_Verificado.setFont(f_subtit);
-        subtit_Verificado.setHorizontalAlignment(SwingConstants.CENTER);
-        verificados.add(subtit_Verificado, BorderLayout.NORTH);
+       asignarEstiloTextLabel(valor_Lattice, FUENTE_TEXTO, panelOpciones1);
+        
+        asignarEstiloLabel(nombrePorcionVIH, FUENTE_TEXTO, panelOpciones1);
         
         
-        ventana.add(acciones,BorderLayout.CENTER);
+        
+        asignarEstiloSlider(valor_pVIH,panelOpciones1, 10, 1);
+        
+        asignarEstiloLabel(nombreProbabilidadCelulaInfectada, FUENTE_TEXTO, panelOpciones1);
+        asignarEstiloSlider(valor_P_infec, panelOpciones1, 10, 1);
+        
+        panelPrincipal.add(panelOpciones1); // se acplola el primer panel de opciones
+        
+        //panel opciones dos
+        asignarEstiloLabel(nombreResistenciaTipoA, FUENTE_TEXTO, panelOpciones2);
+        
+        asignarEstiloSlider(valor_RA, panelOpciones2, 8, 1);
+        
+        asignarEstiloLabel(nombreResistenciaTipoB, FUENTE_TEXTO, panelOpciones2);
+        
+        asignarEstiloSlider(valor_RB, panelOpciones2, 8, 1);
+        
+        panelPrincipal.add(panelOpciones2); // se acopla el segundo panle de opciones
+        
+        asignarEstiloLabel(nombreTimesSteps, FUENTE_TEXTO, panelOpciones2);
+        
+        asignarEstiloTextLabel(valor_T, FUENTE_TEXTO, panelOpciones2);
+        
+        ventana.add(panelPrincipal,BorderLayout.CENTER);
+        
+        //finalmente, el boton que da inicio a la magia
+        botton_generar_automata.setBackground(Color.DARK_GRAY);
+        botton_generar_automata.setForeground(Color.WHITE);
+        
+        botton_generar_automata.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recabarInformacionAutomata();
+            }
+        });
+        
+        ventana.add(botton_generar_automata,BorderLayout.SOUTH);
+    }
+    
+    
+    private void recabarInformacionAutomata() {
+        int lattice = Integer.parseInt(valor_Lattice.getText()); //falta validacion (>0)
+        
+        double p_VIH = valor_pVIH.getValue() / 100 ; //falta validacion (> 0)
+        
+        double p_infect = valor_P_infec.getValue() / 100 ; //no estoy seguro si puede valer cero
+        
+        int ra = valor_RA.getValue();
+        
+        int rb = valor_RB.getValue();
+        
+        int t = Integer.parseInt(valor_T.getText());
+        
+        
+    }
+    
+    //funciones de diseño
+    private void asignarEstiloLabel(JLabel labelObjetivo, Font fuente, JPanel panelDestino){
+        labelObjetivo.setBackground(Color.BLACK);
+        labelObjetivo.setForeground(Color.WHITE);
+        labelObjetivo.setFont(fuente);
+        labelObjetivo.setHorizontalAlignment(SwingConstants.CENTER);
+        panelDestino.add(labelObjetivo);
+    }
+
+    private void asignarEstiloTextLabel(JTextField input, Font fuente, JPanel panelDestino){
+        input.setBackground(Color.BLACK);
+        input.setForeground(Color.WHITE);
+        input.setFont(fuente);
+        input.setMaximumSize(tamanioMaximoInput);
+        panelDestino.add(input);
+    }
+    
+    private void asignarEstiloSlider(JSlider slider, JPanel panelDestino, int maxTC, int minTC) {
+        slider.setBackground(Color.BLACK);
+        slider.setForeground(Color.WHITE);
+        slider.setMajorTickSpacing(maxTC);
+        slider.setMinorTickSpacing(minTC);
+        slider.setFont(FUENTE_MINI);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        panelDestino.add(slider);
     }
 
 }
