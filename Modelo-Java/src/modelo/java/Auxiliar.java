@@ -7,9 +7,11 @@ package modelo.java;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -28,7 +30,7 @@ public class Auxiliar {
     public static final Border BORDE = BorderFactory.createLineBorder(Color.darkGray,3);
     public static final Border BORDE_LIGERO = BorderFactory.createLineBorder(Color.BLACK, 1);
     
-    public static final Border BORDE_COMPUESTO = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    public static final Border BORDE_COMPUESTO = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(10, 10, 10, 10));
     public static final BorderLayout LAYOUT = new BorderLayout(0, 0);
     
     
@@ -61,4 +63,13 @@ public class Auxiliar {
         slider.setPaintTicks(true);
         panelDestino.add(slider);
     }
+    
+    public static void asignarEstilosBoton(JButton boton, JPanel panelDestino){
+        boton.setBackground(Color.DARK_GRAY);
+        boton.setForeground(Color.WHITE);
+        boton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelDestino.add(boton);
+    }
+    
 }

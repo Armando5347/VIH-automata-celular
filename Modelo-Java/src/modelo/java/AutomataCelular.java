@@ -81,7 +81,6 @@ public class AutomataCelular {
                     matrizCelulas[i][j].setEstado(matrizCelulas[i][j].getEstadoFuturo());
                 }
             }
-
             calcularDensidades();
         }
     }

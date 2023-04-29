@@ -46,6 +46,8 @@ public class Celula {
             case 3:
                 this.representacionGrafica.setBackground(Color.RED);
         }
+        this.representacionGrafica.repaint();
+        this.representacionGrafica.updateUI();
     }
 
     public int getEstadoFuturo() {

@@ -11,17 +11,23 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 
 public class Malla extends Thread{
     
     private AutomataCelular automata; //el automata
+    
+    private static final long SEGUNDO = 1000;
+    
+    private static volatile boolean ordenContinuar = true; //por defecto, se encuentra como verdadera, de que DEBE CONTINUAR
     
     private final JFrame ventana;
     private final JPanel contenedorCabecera;
@@ -62,44 +68,57 @@ public class Malla extends Thread{
     public void run() {
         ventana.setBackground(Color.black);
         ventana.setLayout(Auxiliar.LAYOUT);
+        ventana.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         buildMain();
         
         ventana.pack();
         ventana.setVisible(true);
+        int semanas = 0;
+        while(ordenContinuar){
+            try {
+                automata.ejecutarSimulacion(1);
+                semanas ++; //avanza 1 semana o time step
+                panelPrincipal.repaint();
+                panelPrincipal.updateUI();
+                System.out.println("Estamos en el t = " + semanas );
+                synchronized (this){
+                    wait(Malla.SEGUNDO);
+                }
+                //espera un segundo para realziar la siguiente iteracion
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Malla.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        automata.imprimirDensidades();
     }
 
     private void buildMain() {
         //la parte de arriba
-        contenedorCabecera.setLayout( new  BoxLayout(contenedorCabecera, BoxLayout.X_AXIS));
+        contenedorCabecera.setLayout( new  GridLayout(1, 0, 5, 1));
         contenedorCabecera.setBackground(Color.black);
         
         Auxiliar.asignarEstiloLabel(nombreSanas, Auxiliar.FUENTE_MINI, contenedorCabecera);
         Auxiliar.asignarEstiloLabel(nombreTipoA, Auxiliar.FUENTE_MINI, contenedorCabecera);
         Auxiliar.asignarEstiloLabel(nombreTipoB, Auxiliar.FUENTE_MINI, contenedorCabecera);
         Auxiliar.asignarEstiloLabel(nombreMuertas, Auxiliar.FUENTE_MINI, contenedorCabecera);
-        
         ventana.add(contenedorCabecera,BorderLayout.NORTH);
         
         //centro
         panelPrincipal.setBackground(Color.black);
         panelPrincipal.setLayout(layoutMalla);
         panelPrincipal.setBorder(Auxiliar.BORDE_COMPUESTO);
-
-        
         
         //parte de abajo
         contenedorBotones.setBackground(Color.black);
-        contenedorBotones.setLayout(new BoxLayout(contenedorBotones, BoxLayout.X_AXIS));
+        contenedorBotones.setLayout(new GridLayout(1, 0, 2, 2));
         contenedorBotones.setBorder(Auxiliar.BORDE);
         
         //malla
         int lattice = automata.getL();
-        Celula matriz[][] = new Celula[lattice][lattice];
-        matriz = automata.getMatrizCelulas();
+        Celula matriz[][] = automata.getMatrizCelulas();
         for (int i = 0; i < lattice; i++) {
             for (int j = 0; j < lattice; j++) {
-                System.out.println("Celula ["+ i +"][" + j+"]: "+matriz[i][j].getEstado());
                 panelPrincipal.add(matriz[j][i].getRepresentacionGrafica());
             }
         }
@@ -108,27 +127,31 @@ public class Malla extends Thread{
         
         
         //botones
-        botonFinalizacion.setBackground(Color.DARK_GRAY);
-        botonFinalizacion.setForeground(Color.WHITE);
+        contenedorBotones.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+        contenedorBotones.setAlignmentY(JPanel.CENTER_ALIGNMENT);
+        
+        Auxiliar.asignarEstilosBoton(botonFinalizacion, contenedorBotones);
         botonFinalizacion.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                terminarSimulacion();
             }
         });
-        contenedorBotones.add(botonFinalizacion);
         
-        botonEstadisticas.setBackground(Color.DARK_GRAY);
-        botonEstadisticas.setForeground(Color.WHITE);
+        Auxiliar.asignarEstilosBoton(botonEstadisticas, contenedorBotones);
+        
         botonEstadisticas.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
             }
         });
-        contenedorBotones.add(botonEstadisticas);
+        
         ventana.add(contenedorBotones,BorderLayout.SOUTH);
     }
      
-   
+    
+    private void terminarSimulacion() {
+        ordenContinuar = false; //se detiene el pasod e los time stems (semanas)
+    }
 }
