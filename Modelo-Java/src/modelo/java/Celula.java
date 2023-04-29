@@ -43,7 +43,6 @@ public class Celula {
         // Cambiar el color de la representación gráfica de la célula según su estado
         this.representacionGrafica.setBackground(COLORES[estado]);
         this.representacionGrafica.repaint();
-        this.representacionGrafica.updateUI();
     }
 
     // Métodos get y set para acceder y modificar el estado futuro de la célula

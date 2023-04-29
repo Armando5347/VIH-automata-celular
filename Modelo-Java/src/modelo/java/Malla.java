@@ -143,7 +143,7 @@ public class Malla extends Thread{
         botonEstadisticas.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                Estadistica.generargrafica(automata.getCabeceraDensidades());
             }
         });
         

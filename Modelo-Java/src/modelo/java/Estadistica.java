@@ -15,26 +15,32 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Estadistica {
     
-    private ArrayList <NodoDensidad> densidadesModelo;
-
     public Estadistica() {
     }
 
-    public Estadistica(ArrayList<NodoDensidad> densidadesModelo) {
-        this.densidadesModelo = densidadesModelo;
-    }
     
-    public static void generargrafica(){
+    public static void generargrafica(NodoDensidad densidadesModelo){
         try{
-        DefaultCategoryDataset ds =new DefaultCategoryDataset();
-        ds.addValue(1518, "Delitos contra la vida y la Integridad Corporal", "");
-        ds.addValue(261, "Delitos contra la Libertad", "");
-        ds.addValue(944, "Delitos contra la libertad sexual", "");
-        ds.addValue(20139, "Delitos contra el patrimonio", "");
+        DefaultCategoryDataset ds = new DefaultCategoryDataset();
+        NodoDensidad nodoIterador = densidadesModelo;
+        int contadorDensidades = 0;
+        while (nodoIterador != null){
+            ds.addValue(nodoIterador.densidadCelulasSanas, "Células sanas", String.valueOf(contadorDensidades));
+            ds.addValue(nodoIterador.densidadCelulasInfectadas, "Células infectadas", String.valueOf(contadorDensidades));
+            ds.addValue(nodoIterador.densidadCelulasMuertas, "Células muertas", String.valueOf(contadorDensidades));
+            nodoIterador = nodoIterador.getSiguiente();
+            contadorDensidades ++;
+        }
         
-        
-        JFreeChart jf= ChartFactory.createBarChart3D("Delitos en Cuautemoc", "Crímenes", "Delitos cometidos a lo largo del 2019", ds, PlotOrientation.VERTICAL, true, true, true);
-            ChartFrame f= new ChartFrame("Grafica inseguridad",jf);
+        JFreeChart jf = ChartFactory.createLineChart("Densidades de celulas",
+                "Peridodos (semanas)",
+                "Densidad",
+                ds, 
+                PlotOrientation.VERTICAL, 
+                true, 
+                true, 
+                true);
+            ChartFrame f = new ChartFrame("Grafica de densidades",jf);
             f.setSize(1000,600);
             f.setLocationRelativeTo(null);
             f.setVisible(true);
@@ -45,12 +51,4 @@ public class Estadistica {
         
     }
 
-    public ArrayList<NodoDensidad> getDensidadesModelo() {
-        return densidadesModelo;
-    }
-
-    public void setDensidadesModelo(ArrayList<NodoDensidad> densidadesModelo) {
-        this.densidadesModelo = densidadesModelo;
-    }
-    
 }

@@ -206,6 +206,10 @@ void actualizar_celula(Celula celula_a_actualizar, int pos_x, int pos_y) {
     public int getT(){
            return this.t;
     }
+
+    public NodoDensidad getCabeceraDensidades() {
+        return this.cabeceraDensidades;
+    }
     
 }
 
