@@ -1,5 +1,22 @@
-import java.util.Random;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package automatacelular;
 
+import java.util.Random;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+/**
+ *
+ * @author saids
+ */
 public class AutomataCelular {
     private int L;
     private int RA;
@@ -12,10 +29,15 @@ public class AutomataCelular {
     private NodoDensidad cabeceraDensidades;
     private NodoDensidad densidadActual;
     private NodoDensidad nodoDensidadAuxiliar;
+    private double p_i;//inecesarias, checar eso
+    private double p_m;
+    private Random random;
+    private int celulasInfectadasA;
+    private int celulasInfectadasB;
 
     public AutomataCelular() {}
 
-    public AutomataCelular(int L, int ra, int rb, int t, double p_infec, double p_vih) {
+    public AutomataCelular(int L, int ra, int rb, int t, double p_infec, double p_vih, double p_i, double p_m) {
         this.L = L;
         this.RA = ra;
         this.RB = rb;
@@ -23,6 +45,9 @@ public class AutomataCelular {
         this.pinfec = p_infec;
         this.prepl = 1 - p_infec;
         this.pVIH = p_vih;
+        this.p_i = p_i;
+        this.p_m = p_m;
+        this.random = new Random();
         this.matrizCelulas = new Celula[L][L];
 
         for (int i = 0; i < L; i++) {
@@ -33,9 +58,8 @@ public class AutomataCelular {
             }
         }
 
-                int totalCelulasInfectadas = (int) (L * L * p_vih);
+        int totalCelulasInfectadas = (int) (L * L * p_vih);
         int celulasInfectadas = 0;
-        Random random = new Random();
 
         while (celulasInfectadas < totalCelulasInfectadas) {
             int i = random.nextInt(L);
@@ -43,6 +67,7 @@ public class AutomataCelular {
 
             if (matrizCelulas[i][j].getEstado() == Celula.estado_celula_sana) {
                 matrizCelulas[i][j].setEstado(Celula.estado_celula_infentada_A);
+
                 celulasInfectadas++;
             }
         }
@@ -69,86 +94,107 @@ public class AutomataCelular {
         }
     }
 
-        private void actualizarEstadoFuturo(int i, int j) {
-        Celula celula = matrizCelulas[i][j];
-        int estado = celula.getEstado();
-        int vecinosInfectados = contarVecinosInfectados(i, j);
+   private void actualizarEstadoFuturo(int i, int j) {
+    Celula celula = matrizCelulas[i][j];
+    int estado = celula.getEstado();
+    int vecinosInfectados = contarVecinosInfectados(i, j);
 
-        if (estado == Celula.estado_celula_sana && vecinosInfectados > 0) {
-            double probabilidadInfeccion = 1 - Math.pow((1 - p_i), vecinosInfectados);
-            if (random.nextDouble() < probabilidadInfeccion) {
-                celula.setEstadoFuturo(Celula.estado_celula_infentada_A);
-            }
-        } else if (estado == Celula.estado_celula_infentada_A) {
-            celula.setEstadoFuturo(Celula.estado_celula_infentada_B);
-        } else if (estado == Celula.estado_celula_infentada_B) {
-            if (random.nextDouble() < p_m) {
-                celula.setEstadoFuturo(Celula.estado_celula_muerta);
-            } else {
-                celula.setEstadoFuturo(Celula.estado_celula_infentada_A);
-            }
+    if (estado == Celula.estado_celula_sana && vecinosInfectados > 0) {
+        double probabilidadInfeccion = 1 - Math.pow((1 - p_i), vecinosInfectados);
+        if (random.nextDouble() < probabilidadInfeccion) {
+            celula.setEstadoFuturo(Celula.estado_celula_infentada_A);
         }
-    }
-
-    private int contarVecinosInfectados(int i, int j) {
-        int vecinosInfectados = 0;
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0) continue;
-                int vecinoI = (i + x + L) % L;
-                int vecinoJ = (j + y + L) % L;
-                if (matrizCelulas[vecinoI][vecinoJ].getEstado() != Celula.estado_celula_sana) {
-                    vecinosInfectados++;
-                }
-            }
+    } else if (estado == Celula.estado_celula_infentada_A || estado == Celula.estado_celula_infectada_B) {
+        if (Math.random() < prepl) { // Usando prepl como probabilidad de recuperación
+            celula.setEstadoFuturo(Celula.estado_celula_sana);
+        } else {
+            celula.setEstadoFuturo(Celula.estado_celula_muerta);
         }
-        return vecinosInfectados;
-    }
-
-    private void calcularDensidades() {
-        int celulasSanas = 0;
-        int celulasInfectadas = 0;
-        int celulasMuertas = 0;
-
-        for (int i = 0; i < L; i++) {
-            for (int j = 0; j < L; j++) {
-                int estado = matrizCelulas[i][j].getEstado();
-                if (estado == Celula.estado_celula_sana) {
-                    celulasSanas++;
-                } else if (estado == Celula.estado_celula_infentada_A || estado == Celula.estado_celula_infentada_B) {
-                    celulasInfectadas++;
-                } else if (estado == Celula.estado_celula_muerta) {
-                    celulasMuertas++;
-                }
-            }
+    } else if (estado == Celula.estado_celula_muerta) {
+        double randomValue = Math.random();
+        if (randomValue < prepl) { // Usando prepl como probabilidad de resurrección
+            celula.setEstadoFuturo(Celula.estado_celula_sana);
+        } else if (randomValue >= prepl && randomValue < prepl + pinfec) { // Usando pinfec como probabilidad de infección
+            celula.setEstadoFuturo(Celula.estado_celula_infentada_A);
         }
-
-        double densidadSanas = (double) celulasSanas / (L * L);
-        double densidadInfectadas = (double) celulasInfectadas / (L * L);
-        double densidadMuertas = (double) celulasMuertas / (L * L);
-
-        NodoDensidad nuevoNodo = new NodoDensidad(densidadSanas, densidadInfectadas, densidadMuertas);
-        densidadActual.setSiguiente(nuevoNodo);
-        densidadActual = nuevoNodo;
-    }
-
-        public void imprimirDensidades() {
-        NodoDensidad nodo = listaDensidades;
-        System.out.println("Tiempo\tDensidad Sanas\tDensidad Infectadas\tDensidad Muertas");
-        int tiempo = 0;
-        while (nodo != null) {
-            System.out.printf("%d\t%.6f\t%.6f\t%.6f\n", tiempo, nodo.getDensidadSanas(), nodo.getDensidadInfectadas(), nodo.getDensidadMuertas());
-            nodo = nodo.getSiguiente();
-            tiempo++;
-        }
-    }
-
-
-
-    public static void main(String[] args) {
-        AutomataCelular automata = new AutomataCelular(100, 1, 1, 10, 0.5, 0.01);
-        automata.ejecutarSimulacion(100);
-        automata.imprimirDensidades();
     }
 }
+
+
+private int contarVecinosInfectados(int i, int j) {
+    int vecinosInfectados = 0;
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            if (x == 0 && y == 0) continue;
+            int vecinoI = (i + x + L) % L;
+            int vecinoJ = (j + y + L) % L;
+            //Aun une las celulas, checar eso
+            if (matrizCelulas[vecinoI][vecinoJ].getEstado() != Celula.estado_celula_sana) {
+                vecinosInfectados++;
+            }
+        }
+    }
+    return vecinosInfectados;
+}
+
+private void calcularDensidades() {
+    int celulasSanas = 0;
+    celulasInfectadasA = 0;
+    celulasInfectadasB = 0;
+    int celulasMuertas = 0;
+
+    for (int i = 0; i < L; i++) {
+        for (int j = 0; j < L; j++) {
+            int estado = matrizCelulas[i][j].getEstado();
+            if (estado == Celula.estado_celula_sana) {
+                celulasSanas++;
+            } else if (estado == Celula.estado_celula_infentada_A) {
+                celulasInfectadasA++;
+            } else if (estado == Celula.estado_celula_infectada_B) {
+                celulasInfectadasB++;
+            } else if (estado == Celula.estado_celula_muerta) {
+                celulasMuertas++;
+            }
+        }
+    }
+
+    double densidadSanas = (double) celulasSanas / (L * L);
+    double densidadInfectadasA = (double) celulasInfectadasA / (L * L);
+    double densidadInfectadasB = (double) celulasInfectadasB / (L * L);
+    double densidadMuertas = (double) celulasMuertas / (L * L);
+
+    NodoDensidad nuevoNodo = new NodoDensidad(densidadSanas, densidadInfectadasA + densidadInfectadasB, densidadMuertas);
+    densidadActual.setSiguiente(nuevoNodo);
+    densidadActual = nuevoNodo;
+}
+
+public void imprimirDensidades() {
+    int tiempo = 0;
+    NodoDensidad nodo;
+    nodo = cabeceraDensidades;
+    System.out.println("Tiempo\tSanas\t\tInfectadas\tMuertas");
+    while (nodo != null) {
+System.out.printf("%d\t%.6f\t%.6f\t%.6f\n", tiempo, nodo.getDensidadCelulasSanas(), nodo.getDensidadCelulasInfectadas(), nodo.getDensidadCelulasMuertas());
+nodo = nodo.getSiguiente();
+tiempo++;
+}
+}
+public void imprimirMatriz() {
+    for (int i = 0; i < L; i++) {
+        for (int j = 0; j < L; j++) {
+            System.out.print(matrizCelulas[i][j].getEstado() + " ");
+        }
+        System.out.println();
+    }
+}
+
+public static void main(String[] args) {
+    AutomataCelular automata = new AutomataCelular(10, 1, 1, 10, 0.5, 0.01, 0.3, 0.3);
+    automata.ejecutarSimulacion(100);
+    automata.imprimirDensidades();
+    System.out.println("\nMatriz final:");
+    automata.imprimirMatriz();
+}
+}
+
 
