@@ -1,22 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @author Jarillo Henrández Armando Damián
+ *         Sigala Morales Said
+ * 
  */
-package automatacelular;
+package modelo.java;
 
 import java.util.Random;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-/**
- *
- * @author saids
- */
+
 public class AutomataCelular {
     private int L;
     private int RA;
@@ -188,13 +178,6 @@ public void imprimirMatriz() {
     }
 }
 
-public static void main(String[] args) {
-    AutomataCelular automata = new AutomataCelular(10, 1, 1, 10, 0.5, 0.01, 0.3, 0.3);
-    automata.ejecutarSimulacion(100);
-    automata.imprimirDensidades();
-    System.out.println("\nMatriz final:");
-    automata.imprimirMatriz();
-}
 }
 
 

@@ -82,3 +82,5 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
+/VIH-automata-celular/nbproject/private/
+/Modelo-Java/nbproject/private/
