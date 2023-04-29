@@ -1,9 +1,10 @@
 /**
- * @author Jarillo Henrández Armando Damián
+ * @author Jarillo Hernández Armando Damián
  *         Sigala Morales Said
  * 
  */
 package modelo.java;
+import javax.swing.JPanel;
 
 public class Celula {
     public static final int ESTADO_CELULA_SANA = 0;
@@ -14,11 +15,13 @@ public class Celula {
     private int estado;
     private int estadoFuturo;
     private int periodosRestantes;
+    private JPanel representacionGrafica;
 
     public Celula() {
         estado = ESTADO_CELULA_SANA;
         estadoFuturo = ESTADO_CELULA_SANA;
         periodosRestantes = 0;
+        representacionGrafica = new JPanel();
     }
 
     public int getEstado() {
@@ -48,4 +51,15 @@ public class Celula {
     public void pasoPeriodo() {
         this.periodosRestantes--;
     }
+
+    public JPanel getRepresentacionGrafica() {
+        return representacionGrafica;
+    }
+
+    public void setRepresentacionGrafica(JPanel representacionGrafica) {
+        this.representacionGrafica = representacionGrafica;
+    }
+    
+    
+    
 }

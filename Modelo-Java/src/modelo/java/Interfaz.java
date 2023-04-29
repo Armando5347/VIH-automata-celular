@@ -1,5 +1,5 @@
 /**
- * @author Jarillo Henrández Armando Damián
+ * @author Jarillo Hernández Armando Damián
  *         Sigala Morales Said
  * 
  */
@@ -54,15 +54,6 @@ public class Interfaz extends Thread{
     
     private JButton botton_generar_automata = new JButton("Generar automata celular");
     
-    private final Font FUENTE_TITULO = new Font("Verdana", Font.BOLD, 35);
-    private final Font FUENTE_TEXTO = new Font("Verdana", Font.PLAIN, 15);
-    private final Font FUENTE_MINI = new Font("Verdana", Font.PLAIN, 10);
-    
-    private final Border BORDE = BorderFactory.createLineBorder(Color.darkGray,3);
-    private final Border BORDE_COMPUESTO = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
-    private BorderLayout layout = new BorderLayout(0, 0);
-    
-    private final Dimension tamanioMaximoInput = new Dimension(3000, 40);
     
 // Lattice, p_VIH, RA, RB, T, P_infec
     
@@ -77,12 +68,12 @@ public class Interfaz extends Thread{
     @Override
     public void run() {
         ventana.setBackground(Color.black);
-        ventana.setLayout(layout);
+        ventana.setLayout(Auxiliar.LAYOUT);
         titulo.setBackground(Color.black);
         titulo.setForeground(Color.white);
-        titulo.setFont(FUENTE_TITULO);
+        titulo.setFont(Auxiliar.FUENTE_TITULO);
         contenedorTitulo.add(titulo);
-        contenedorTitulo.setBorder(BORDE);
+        contenedorTitulo.setBorder(Auxiliar.BORDE);
         contenedorTitulo.setBackground(Color.black);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
@@ -94,20 +85,20 @@ public class Interfaz extends Thread{
     private void buildMain() {
         panelPrincipal.setBackground(Color.black);
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.X_AXIS));
-        panelPrincipal.setBorder(BORDE_COMPUESTO);
+        panelPrincipal.setBorder(Auxiliar.BORDE_COMPUESTO);
         
         panelOpciones1.setBackground(Color.black);
         panelOpciones1.setLayout(new BoxLayout(panelOpciones1, BoxLayout.Y_AXIS));
-        panelOpciones1.setBorder(BORDE);
+        panelOpciones1.setBorder(Auxiliar.BORDE);
         
         panelOpciones2.setBackground(Color.black);
         panelOpciones2.setLayout(new BoxLayout(panelOpciones2, BoxLayout.Y_AXIS));
-        panelOpciones2.setBorder(BORDE);
+        panelOpciones2.setBorder(Auxiliar.BORDE);
         
         //panel opciones uno
-        asignarEstiloLabel(nombreLattice, FUENTE_TEXTO, panelOpciones1);
+        Auxiliar.asignarEstiloLabel(nombreLattice, Auxiliar.FUENTE_TEXTO, panelOpciones1);
         
-       asignarEstiloTextLabel(valor_Lattice, FUENTE_TEXTO, panelOpciones1);
+       Auxiliar.asignarEstiloTextLabel(valor_Lattice, Auxiliar.FUENTE_TEXTO, panelOpciones1);
         
         asignarEstiloLabel(nombrePorcionVIH, FUENTE_TEXTO, panelOpciones1);
         
@@ -165,35 +156,9 @@ public class Interfaz extends Thread{
         
         int t = Integer.parseInt(valor_T.getText());
         
-        
+        Malla malla = new Malla(lattice, p_VIH, p_infect, ra, rb, t);
+        malla.start();
     }
     
-    //funciones de diseño
-    private void asignarEstiloLabel(JLabel labelObjetivo, Font fuente, JPanel panelDestino){
-        labelObjetivo.setBackground(Color.BLACK);
-        labelObjetivo.setForeground(Color.WHITE);
-        labelObjetivo.setFont(fuente);
-        labelObjetivo.setHorizontalAlignment(SwingConstants.CENTER);
-        panelDestino.add(labelObjetivo);
-    }
-
-    private void asignarEstiloTextLabel(JTextField input, Font fuente, JPanel panelDestino){
-        input.setBackground(Color.BLACK);
-        input.setForeground(Color.WHITE);
-        input.setFont(fuente);
-        input.setMaximumSize(tamanioMaximoInput);
-        panelDestino.add(input);
-    }
-    
-    private void asignarEstiloSlider(JSlider slider, JPanel panelDestino, int maxTC, int minTC) {
-        slider.setBackground(Color.BLACK);
-        slider.setForeground(Color.WHITE);
-        slider.setMajorTickSpacing(maxTC);
-        slider.setMinorTickSpacing(minTC);
-        slider.setFont(FUENTE_MINI);
-        slider.setPaintLabels(true);
-        slider.setPaintTicks(true);
-        panelDestino.add(slider);
-    }
 
 }
