@@ -99,8 +99,8 @@ public class Malla extends Thread{
         matriz = automata.getMatrizCelulas();
         for (int i = 0; i < lattice; i++) {
             for (int j = 0; j < lattice; j++) {
-                System.out.println("Celula: "+matriz[i][j].getEstado());
-                panelPrincipal.add(matriz[i][j].getRepresentacionGrafica());
+                System.out.println("Celula ["+ i +"][" + j+"]: "+matriz[i][j].getEstado());
+                panelPrincipal.add(matriz[j][i].getRepresentacionGrafica());
             }
         }
         

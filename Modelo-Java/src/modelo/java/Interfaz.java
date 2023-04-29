@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -138,11 +139,23 @@ public class Interfaz extends Thread{
     
     
     private void recabarInformacionAutomata() {
-        int lattice = Integer.parseInt(valor_Lattice.getText()); //falta validacion (>0)
-        
-        double p_VIH = valor_pVIH.getValue() / 100 ; //falta validacion (> 0)
-        
-        double p_infect = valor_P_infec.getValue() / 100 ; //no estoy seguro si puede valer cero
+        int lattice;
+        try{
+            lattice = Integer.parseInt(valor_Lattice.getText()); 
+            if(lattice == 0){
+                JOptionPane.showMessageDialog(ventana, "El valor de lattice no puede ser cero", "Error en los datos",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(ventana, "El valor de lattice debe ser entero", "Error en los datos",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        double p_VIH = (double) valor_pVIH.getValue() / 100 ; 
+        if(p_VIH == 0){
+            JOptionPane.showMessageDialog(ventana, "La porcion de celulas infectas iniciales no puede ser cero", "Error en los datos",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        double p_infect =(double) valor_P_infec.getValue() / 100 ; //no estoy seguro si puede valer cero
         
         int ra = valor_RA.getValue();
         

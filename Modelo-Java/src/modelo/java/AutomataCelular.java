@@ -62,6 +62,9 @@ public class AutomataCelular {
         }
 
         this.cabeceraDensidades = new NodoDensidad();
+        this.cabeceraDensidades.densidadCelulasInfectadas = totalCelulasInfectadas / (L*L);
+        this.cabeceraDensidades.densidadCelulasInfectadas = ( L*L - totalCelulasInfectadas ) / ( L*L);
+        this.cabeceraDensidades.densidadCelulasMuertas = 0;
         this.densidadActual = this.cabeceraDensidades;
     }
 
