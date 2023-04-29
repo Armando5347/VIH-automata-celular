@@ -59,7 +59,7 @@ public class Malla extends Thread{
         this.contenedorBotones = new JPanel();
         this.contenedorCabecera = new JPanel();
         this.ventana = new JFrame("Simulación del automata");
-        automata = new AutomataCelular(l, ra, rb, t, p_infect, p_vih, 0, 0);
+        automata = new AutomataCelular(l, ra, rb, t, p_infect, p_vih);
         automata.imprimirDensidades();
         layoutMalla = new GridLayout(l, l);
     }
@@ -116,7 +116,7 @@ public class Malla extends Thread{
         
         //malla
         int lattice = automata.getL();
-        Celula matriz[][] = automata.getMatrizCelulas();
+        Celula matriz[][] = automata.getMatrizCelular();
         for (int i = 0; i < lattice; i++) {
             for (int j = 0; j < lattice; j++) {
                 panelPrincipal.add(matriz[j][i].getRepresentacionGrafica());
