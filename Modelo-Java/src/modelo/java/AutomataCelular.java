@@ -5,6 +5,8 @@
  */
 package modelo.java;
 
+import java.util.Random;
+
 /**
  * La clase AutomataCelular representa un autómata celular que simula la evolución temporal de un tejido celular
  * en el que puede haber células sanas, infectadas tipo A, infectadas tipo B y muertas.

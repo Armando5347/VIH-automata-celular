@@ -4,7 +4,7 @@
  * 
  */
 package modelo.java;
-mport java.awt.Color;
+import java.awt.Color;
 import javax.swing.JPanel;
 
 public class Celula {
@@ -39,26 +39,11 @@ public class Celula {
 
     public void setEstado(int estado) {
         this.estado = estado;
-<<<<<<< Updated upstream
+        
         // Cambiar el color de la representación gráfica de la célula según su estado
-        switch(estado){
-            case 0:
-                this.representacionGrafica.setBackground(Color.BLUE);
-                break;
-            case 1:
-                this.representacionGrafica.setBackground(Color.YELLOW);
-                break;
-            case 2:
-                this.representacionGrafica.setBackground(Color.GREEN);
-                break;
-            case 3:
-                this.representacionGrafica.setBackground(Color.RED);
-        }
-=======
         this.representacionGrafica.setBackground(COLORES[estado]);
         this.representacionGrafica.repaint();
         this.representacionGrafica.updateUI();
->>>>>>> Stashed changes
     }
 
     // Métodos get y set para acceder y modificar el estado futuro de la célula
