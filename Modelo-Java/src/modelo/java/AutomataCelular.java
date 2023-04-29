@@ -43,7 +43,7 @@ public class AutomataCelular {
         for (int i = 0; i < L; i++) {
             for (int j = 0; j < L; j++) {
                 this.matrizCelulas[i][j] = new Celula();
-                this.matrizCelulas[i][j].setEstado(Celula.estado_celula_sana);
+                this.matrizCelulas[i][j].setEstado(Celula.ESTADO_CELULA_SANA);
                 this.matrizCelulas[i][j].setPeriodos(t);
             }
         }
@@ -55,8 +55,8 @@ public class AutomataCelular {
             int i = random.nextInt(L);
             int j = random.nextInt(L);
 
-            if (matrizCelulas[i][j].getEstado() == Celula.estado_celula_sana) {
-                matrizCelulas[i][j].setEstado(Celula.estado_celula_infentada_A);
+            if (matrizCelulas[i][j].getEstado() == Celula.ESTADO_CELULA_SANA) {
+                matrizCelulas[i][j].setEstado(Celula.ESTADO_CELULA_SANA);
 
                 celulasInfectadas++;
             }
@@ -89,23 +89,23 @@ public class AutomataCelular {
     int estado = celula.getEstado();
     int vecinosInfectados = contarVecinosInfectados(i, j);
 
-    if (estado == Celula.estado_celula_sana && vecinosInfectados > 0) {
+    if (estado == Celula.ESTADO_CELULA_SANA && vecinosInfectados > 0) {
         double probabilidadInfeccion = 1 - Math.pow((1 - p_i), vecinosInfectados);
         if (random.nextDouble() < probabilidadInfeccion) {
-            celula.setEstadoFuturo(Celula.estado_celula_infentada_A);
+            celula.setEstadoFuturo(Celula.ESTADO_CELULA_INFECTADA_A);
         }
-    } else if (estado == Celula.estado_celula_infentada_A || estado == Celula.estado_celula_infectada_B) {
+    } else if (estado == Celula.ESTADO_CELULA_INFECTADA_A || estado == Celula.ESTADO_CELULA_INFECTADA_B) {
         if (Math.random() < prepl) { // Usando prepl como probabilidad de recuperación
-            celula.setEstadoFuturo(Celula.estado_celula_sana);
+            celula.setEstadoFuturo(Celula.ESTADO_CELULA_INFECTADA_A);
         } else {
-            celula.setEstadoFuturo(Celula.estado_celula_muerta);
+            celula.setEstadoFuturo(Celula.ESTADO_CELULA_MUERTA);
         }
-    } else if (estado == Celula.estado_celula_muerta) {
+    } else if (estado == Celula.ESTADO_CELULA_MUERTA) {
         double randomValue = Math.random();
         if (randomValue < prepl) { // Usando prepl como probabilidad de resurrección
-            celula.setEstadoFuturo(Celula.estado_celula_sana);
+            celula.setEstadoFuturo(Celula.ESTADO_CELULA_SANA);
         } else if (randomValue >= prepl && randomValue < prepl + pinfec) { // Usando pinfec como probabilidad de infección
-            celula.setEstadoFuturo(Celula.estado_celula_infentada_A);
+            celula.setEstadoFuturo(Celula.ESTADO_CELULA_INFECTADA_A);
         }
     }
 }
@@ -119,7 +119,7 @@ private int contarVecinosInfectados(int i, int j) {
             int vecinoI = (i + x + L) % L;
             int vecinoJ = (j + y + L) % L;
             //Aun une las celulas, checar eso
-            if (matrizCelulas[vecinoI][vecinoJ].getEstado() != Celula.estado_celula_sana) {
+            if (matrizCelulas[vecinoI][vecinoJ].getEstado() != Celula.ESTADO_CELULA_SANA) {
                 vecinosInfectados++;
             }
         }
@@ -136,13 +136,13 @@ private void calcularDensidades() {
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
             int estado = matrizCelulas[i][j].getEstado();
-            if (estado == Celula.estado_celula_sana) {
+            if (estado == Celula.ESTADO_CELULA_SANA) {
                 celulasSanas++;
-            } else if (estado == Celula.estado_celula_infentada_A) {
+            } else if (estado == Celula.ESTADO_CELULA_INFECTADA_A) {
                 celulasInfectadasA++;
-            } else if (estado == Celula.estado_celula_infectada_B) {
+            } else if (estado == Celula.ESTADO_CELULA_INFECTADA_B) {
                 celulasInfectadasB++;
-            } else if (estado == Celula.estado_celula_muerta) {
+            } else if (estado == Celula.ESTADO_CELULA_MUERTA) {
                 celulasMuertas++;
             }
         }

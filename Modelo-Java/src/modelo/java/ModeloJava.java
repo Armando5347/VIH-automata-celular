@@ -10,7 +10,8 @@ public class ModeloJava {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Interfaz ventana_programa = new Interfaz();
+        ventana_programa.start();
     }
     
 }

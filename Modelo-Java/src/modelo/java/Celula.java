@@ -6,18 +6,18 @@
 package modelo.java;
 
 public class Celula {
-    public static final int estado_celula_sana = 0;
-    public static final int estado_celula_infentada_A = 1;
-    public static final int estado_celula_infectada_B= 2; // Corregido el nombre de la variable
-    public static final int estado_celula_muerta = 3;
+    public static final int ESTADO_CELULA_SANA = 0;
+    public static final int ESTADO_CELULA_INFECTADA_A = 1;
+    public static final int ESTADO_CELULA_INFECTADA_B = 2; // Corregido el nombre de la variable
+    public static final int ESTADO_CELULA_MUERTA = 3;
 
     private int estado;
     private int estadoFuturo;
     private int periodosRestantes;
 
     public Celula() {
-        estado = estado_celula_sana;
-        estadoFuturo = estado_celula_sana;
+        estado = ESTADO_CELULA_SANA;
+        estadoFuturo = ESTADO_CELULA_SANA;
         periodosRestantes = 0;
     }
 
