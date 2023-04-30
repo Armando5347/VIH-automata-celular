@@ -6,6 +6,10 @@
 package modelo.java;
 
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 /**
  * La clase AutomataCelular representa un autómata celular que simula la evolución temporal de un tejido celular
@@ -23,7 +27,8 @@ public class AutomataCelular {
     private Celula[][] matrizCelulas; // Matriz de células
     private NodoDensidad cabeceraDensidades; // Nodo inicial de la lista enlazada de densidades
     private NodoDensidad densidadActual; // Nodo actual de la lista enlazada de densidades
-    private Random random; // Generador de números aleatorios
+    private Random random; // Generador de números aleatorio
+
 
     // Se define el constructor vacío
     public AutomataCelular() {}
@@ -207,9 +212,5 @@ void actualizar_celula(Celula celula_a_actualizar, int pos_x, int pos_y) {
            return this.t;
     }
 
-    public NodoDensidad getCabeceraDensidades() {
-        return this.cabeceraDensidades;
-    }
     
 }
-
