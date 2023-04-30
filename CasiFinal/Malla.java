@@ -20,6 +20,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.Dimension;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 
 
@@ -34,6 +36,8 @@ public class Malla extends Thread {
     private JButton botonPausarReanudar = new JButton("Pausar");
     private JPanel panelPrincipal;
     private BufferedImage imageBuffer;
+    private JLabel labelSemanas = new JLabel("Semana: 0");
+
 
     private JLabel nombreSanas = new JLabel("Celulas sanas: AZÚL");
     private JLabel nombreTipoA = new JLabel("Infectadas tipo A: AMARILLO");
@@ -72,7 +76,6 @@ public class Malla extends Thread {
         automata.imprimirDensidades();
         layoutMalla = new GridLayout(l, l);
         botonEstadisticas.setEnabled(false);
-       // imageBuffer = new BufferedImage(l * Celula.TAMANO_CELDA, l * Celula.TAMANO_CELDA, BufferedImage.TYPE_INT_ARGB);
         createImageBuffer();
 
     }
@@ -100,34 +103,38 @@ public class Malla extends Thread {
 
          ventana.pack();
          ventana.setVisible(true);
-        int semanas = 0;
+        AtomicInteger semanas = new AtomicInteger(0);
         while (ordenContinuar) {
-            if (!pausado) {
+        if (!pausado) {
+            try {
+                automata.ejecutarSimulacion(1);
+                int currentSemana = semanas.getAndIncrement();
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        updateAnimation();
+                        panelPrincipal.repaint();
+                        labelSemanas.setText("Semana: " + currentSemana); // Actualiza el contador de semanas
+                    }
+                });
+                System.out.println("Estamos en el t = " + currentSemana);
+                synchronized (this) {
+                    wait(FRAME_DELAY);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Malla.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            synchronized (this) {
                 try {
-                    automata.ejecutarSimulacion(1);
-                    semanas++;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            updateAnimation();
-                            panelPrincipal.repaint();
-                        }
-                    });
-                    System.out.println("Estamos en el t = " + semanas);
-                    synchronized (this) {
-                        wait(FRAME_DELAY);
-                    }
-                } catch (InterruptedException ex) { Logger.getLogger(Malla.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    } else {
-                        synchronized (this) {
-                        try {
-                        wait();
-                        } catch (InterruptedException ex) {
-                        Logger.getLogger(Malla.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Malla.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
+    }
+
+
             automata.imprimirDensidades();
 }
 
@@ -136,10 +143,12 @@ private void buildMain() {
     contenedorCabecera.setBackground(Color.black);
     DensidadGrafica densidadGrafica = new DensidadGrafica();
 
+    Auxiliar.asignarEstiloLabel(labelSemanas, Auxiliar.FUENTE_MINI, contenedorCabecera);
     Auxiliar.asignarEstiloLabel(nombreSanas, Auxiliar.FUENTE_MINI, contenedorCabecera);
     Auxiliar.asignarEstiloLabel(nombreTipoA, Auxiliar.FUENTE_MINI, contenedorCabecera);
     Auxiliar.asignarEstiloLabel(nombreTipoB, Auxiliar.FUENTE_MINI, contenedorCabecera);
     Auxiliar.asignarEstiloLabel(nombreMuertas, Auxiliar.FUENTE_MINI, contenedorCabecera);
+    
     ventana.add(contenedorCabecera,BorderLayout.NORTH);
     
     panelPrincipal.setBackground(Color.black);
